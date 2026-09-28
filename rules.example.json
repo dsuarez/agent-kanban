@@ -1,0 +1,24 @@
+{
+  "rules": [
+    {
+      "name": "Vibe on approved",
+      "trigger": {
+        "type": "task_moved",
+        "to_status": "approved"
+      },
+      "action": {
+        "type": "run_command",
+        "cmd": "C:\\Apps\\PortableGit\\bin\\bash.exe",
+        "args": [
+          "-c",
+          "cd /c/Users/dsuapers/Documents/devel/agent-kanban/examples/agent-launcher && bash launch-vibe-win.sh {task_id} {project_id}"
+        ],
+        "env": {
+          "VIBE_ACTIVE_MODEL": "mistral-large"
+        },
+        "max_concurrent": 1,
+        "max_runs": 3
+      }
+    }
+  ]
+}
