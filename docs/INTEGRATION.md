@@ -135,6 +135,62 @@ Recent Cline versions (≥ 3.x) support HTTP MCP servers alongside stdio.
 
 If you've been using the old stdio Cline config (section 2 above), you can keep both — Cline merges tool listings from all servers, but the kanban will appear twice. Pick one transport per Cline instance to avoid duplicate tools in the picker.
 
+### Mistral Vibe (HTTP MCP) <a id="mistral-vibe-http-mcp"></a>
+
+[Mistral Vibe](https://github.com/mistralai/vibe) (this agent) supports HTTP MCP servers.
+
+**Setup.** There are two ways to connect Vibe to agent-kanban:
+
+#### Option A: Interactive sessions (global MCP config)
+
+Create or edit `~/.vibe/mcp.json` (global) or `.vibe/mcp.json` (per project):
+
+```jsonc
+{
+  "mcpServers": {
+    "agent-kanban": {
+      "url": "http://localhost:7777/mcp"
+    }
+  }
+}
+```
+
+Restart your Vibe session. In chat ask: *"What's in my kanban backlog for project myproj?"*. Vibe will call the kanban tools via the HTTP transport and respond with live state.
+
+#### Option B: Headless automation (launcher script)
+
+Use the provided [`examples/agent-launcher/launch-vibe.sh`](../examples/agent-launcher/launch-vibe.sh) script with a `run_command` rule. The script:
+- Sets up a temporary MCP configuration for the run
+- Launches Vibe with the task prompt
+- Handles timeouts and post-run card placement
+- Supports the same environment variables as `launch-claude.sh` (with `VIBE_BIN`, `VIBE_MODEL`)
+
+Example rule in `kanban_data/rules.json`:
+
+```json
+{
+  "rules": [
+    {
+      "name": "Vibe on approved",
+      "trigger": {"type": "task_moved", "to_status": "approved", "project_id": "myproj"},
+      "action": {
+        "type": "run_command",
+        "cmd": "/abs/path/to/agent-kanban/examples/agent-launcher/launch-vibe.sh",
+        "args": ["{task_id}", "{project_id}"],
+        "env": {
+          "VIBE_MODEL": "mistral-large",
+          "AGENT_TIMEOUT_SEC": "1800"
+        },
+        "max_concurrent": 1,
+        "max_runs": 3
+      }
+    }
+  ]
+}
+```
+
+Set `VIBE_BIN` to the path of the Vibe CLI if it's not in your PATH.
+
 ### MCP Inspector <a id="mcp-inspector"></a>
 
 [modelcontextprotocol/inspector](https://github.com/modelcontextprotocol/inspector) is the canonical debugging tool for MCP servers — a browser-based UI that lets you call tools by hand, inspect schemas, and watch the SSE stream live.

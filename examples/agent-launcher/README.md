@@ -10,6 +10,7 @@ why instead of sitting in Analyst forever.
 | File | What it does |
 |---|---|
 | [`launch-claude.sh`](launch-claude.sh) | Runs Claude Code (`claude -p`) headless in the project directory, with the kanban MCP server passed explicitly, a hard timeout, and a safety net that blocks the card with a reason if the agent leaves it behind. |
+| [`launch-vibe.sh`](launch-vibe.sh) | Runs Mistral Vibe headless in the project directory, connecting to agent-kanban via HTTP MCP (`http://localhost:7777/mcp`), with the same timeout and safety mechanisms. |
 
 ## How to wire it up
 
@@ -19,16 +20,16 @@ why instead of sitting in Analyst forever.
    interactive Claude sessions there get the kanban tools too (the launcher
    itself doesn't need it).
 
-2. **Add a rule in `kanban_data/rules.json`**:
+2. **Add a rule in `kanban_data/rules.json`** (for Vibe):
    ```json
    {
      "rules": [
        {
-         "name": "Claude on approved",
+         "name": "Vibe on approved",
          "trigger": {"type": "task_moved", "to_status": "approved", "project_id": "myproj"},
          "action": {
            "type": "run_command",
-           "cmd": "/abs/path/to/agent-kanban/examples/agent-launcher/launch-claude.sh",
+           "cmd": "/abs/path/to/agent-kanban/examples/agent-launcher/launch-vibe.sh",
            "args": ["{task_id}", "{project_id}"],
            "log_file": "~/Library/Logs/agent-kanban/launcher.log",
            "max_concurrent": 1,
@@ -38,7 +39,7 @@ why instead of sitting in Analyst forever.
      ]
    }
    ```
-   Hot-reloaded by mtime — no restart required. `project_id` may also be a
+   For Claude Code, use `launch-claude.sh` instead. Hot-reloaded by mtime — no restart required. `project_id` may also be a
    list (`["web", "api"]`) instead of three copies of the same rule.
 
 3. **Test**: create a task in the backlog → drag it into `Approved` → within
@@ -109,11 +110,10 @@ Set these in the rule's `"env"` object.
 | `KANBAN_URL` | `http://localhost:7777` | board address |
 | `KANBAN_LAUNCHER_ACTOR` | `agent:launcher` | name in the card history |
 | `AGENT_TIMEOUT_SEC` | `3600` | hard limit per run |
-| `CLAUDE_BIN` | auto | path to the `claude` CLI |
-| `CLAUDE_MODEL_S` / `_M` / `_L` | CLI default | model by card size, e.g. a small model for S cards |
-| `KANBAN_PERMISSION_MODE` | `dontAsk` | `acceptEdits` / `bypassPermissions` if you know why |
-| `KANBAN_ALLOWED_TOOLS` | `Bash Read Edit Write Grep Glob TodoWrite` | tools besides the kanban ones |
-| `KANBAN_STRICT_MCP` | `1` | `0` also loads the project's own `.mcp.json` servers |
+| `CLAUDE_BIN` | auto | path to the `claude` CLI (for `launch-claude.sh`) |
+| `VIBE_BIN` | auto | path to the `vibe` CLI (for `launch-vibe.sh`) |
+| `CLAUDE_MODEL_S` / `_M` / `_L` | CLI default | model by card size for Claude |
+| `VIBE_MODEL` | CLI default | model for Vibe |
 | `KANBAN_GATE_CMD` | — | command that must pass before a card stays in testing |
 | `KANBAN_RUNS_DIR` | `~/Library/Logs/agent-kanban/runs` | per-card run folders |
 

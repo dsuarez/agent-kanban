@@ -87,6 +87,7 @@ Pick the integration matching your agent:
 | **Cline** (VSCode extension, legacy stdio) | MCP stdio, same config block | [docs/INTEGRATION.md#cline](docs/INTEGRATION.md#2-cline-mcp) |
 | **🆕 Cursor** | HTTP MCP @ `http://localhost:7777/mcp` | [docs/INTEGRATION.md#cursor](docs/INTEGRATION.md#cursor-http-mcp) |
 | **🆕 Cline (new versions)** | HTTP MCP @ `http://localhost:7777/mcp` | [docs/INTEGRATION.md#cline-http](docs/INTEGRATION.md#cline-http-mcp) |
+| **🆕 Mistral Vibe** | HTTP MCP @ `http://localhost:7777/mcp` | [docs/INTEGRATION.md#mistral-vibe](docs/INTEGRATION.md#mistral-vibe-http-mcp) |
 | **opencode** (sst/opencode) | OpenAPI tools / REST | [docs/INTEGRATION.md#opencode](docs/INTEGRATION.md#3-opencode-rest--openapi) |
 | **Open WebUI** | OpenAPI Tool Server pointing at `/openapi.json` | [docs/INTEGRATION.md#open-webui](docs/INTEGRATION.md#4-open-webui-openapi-tool-server) |
 | **Generic LLM** (Hermes / Llama / Ollama / Mistral / vLLM) | function-calling + REST | [docs/INTEGRATION.md#generic-llm](docs/INTEGRATION.md#5-generic-function-calling-llm) |
