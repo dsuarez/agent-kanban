@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "agent-kanban": {
+      "type": "stdio",
+      "command": "<REPO_PATH>/.venv/Scripts/python.exe",
+      "args": [
+        "-m",
+        "kanban_mcp"
+      ],
+      "cwd": "<REPO_PATH>",
+      "env": {
+        "PYTHONPATH": "<REPO_PATH>",
+        "KANBAN_DB": "<REPO_PATH>/tasks.db",
+        "KANBAN_PROJECT_ID": "default",
+        "KANBAN_ACTOR": "claude"
+      }
+    }
+  }
+}
